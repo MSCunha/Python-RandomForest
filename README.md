@@ -40,55 +40,107 @@ python scikit.py
 
 ## Funcionalidades
 
-Query Dinâmica: Filtros laterais para testar cenários (ex: motorista indo pra cafeteria).
+- **Query Dinâmica:** Filtros interativos para simular cenários de viagem e observar a decisão do modelo em tempo real.
+- **Fronteira de Decisão (2D):** Visualização bidimensional da separação dos dados realizada pelo Random Forest.
+- **Espaço de Decisão (3D):** Gráfico tridimensional que evidencia regiões de sobreposição entre as classes.
+- **Tendência de Regressão:** Exibição da probabilidade contínua de aceitação gerada pelo Extra Trees.
+- **Log de Performance:** Monitoramento dos scores de Validação Cruzada e Grid Search durante a execução.
 
-Fronteira de Decisão (2D): Visualização de como o Random Forest divide o espaço de dados.
-
-Espaço de Decisão (3D): Gráfico com profundidade para explicar sobreposição de dados.
-
-Tendência de Regressão: Visualização de probabilidade gerada pelo Extra Trees.
-
-Log de Performance: Exibição em tempo real dos scores de Validação Cruzada e Tuning
+---
 
 ## Documentação do Processo
 
-Esta seção detalha as escolhas técnicas e os processos de engenharia de dados aplicados no desenvolvimento desta ferramenta, servindo como guia para a manutenção e evolução do código.
+Esta seção descreve as principais decisões técnicas adotadas no projeto, explicando **como cada etapa funciona** e  **por que ela foi utilizada** , com foco didático e manutenção futura.
 
-- Pré-processamento: Label Encoding
-  O primeiro passo da "limpeza" foi o tratamento de variáveis categóricas. Como o conjunto de dados contém informações textuais (ex: clima, destino, acompanhantes), foi utilizada a classe LabelEncoder do Scikit-Learn.
+### 🔹 1. Pré-processamento — Label Encoding
 
-Funcionamento: Transforma rótulos de texto em valores numéricos inteiros.
+Antes do treinamento dos modelos, foi necessário tratar as variáveis categóricas do dataset, que contêm informações textuais como clima, destino e acompanhantes.
 
-Objetivo: Modelos de Machine Learning operam sobre matrizes matemáticas. Sem essa conversão, o algoritmo seria incapaz de realizar os cálculos de distância e probabilidade necessários para os perfis de motorista.
+**Como funciona**
 
-- Random Forest Classifier
-  Selecionado como o modelo principal de classificação devido à sua robustez.
+* Utiliza-se o `LabelEncoder` para converter textos em valores numéricos inteiros.
+* Cada categoria textual passa a ser representada por um número.
 
-Funcionamento: É um método de Ensemble Learning que cria uma floresta de 100 árvores de decisão independentes (n_estimators=100). A predição final é obtida através da técnica de votação majoritária.
+**Por que foi utilizado**
 
-Objetivo: Ao combinar múltiplos modelos, o sistema reduz drasticamente o risco de overfitting (quando o modelo memoriza o dataset em vez de aprender padrões), garantindo uma generalização superior para novos dados.
+* Algoritmos de Machine Learning trabalham com dados numéricos.
+* Árvores de decisão precisam desses valores para realizar os critérios de divisão (splits) durante o treinamento.
 
-- Extra Trees Regressor
-  Implementado para fornecer uma análise de tendência e probabilidade contínua.
+---
 
-Funcionamento: Diferente da Random Forest, o Extremely Randomized Trees escolhe pontos de corte (splits) de forma estocástica (aleatória) em cada nó.
+### 🌳 2. Random Forest Classifier
 
-Objetivo: Esta aleatoriedade ajuda a ignorar o "ruído" estatístico (decisões humanas atípicas presentes no dataset), focando na tendência real de aceitação dos cupons.
+O Random Forest foi escolhido como o **modelo principal de classificação** do sistema.
 
-- Validação Cruzada (Cross-Validation)Para assegurar a estabilidade estatística do modelo, aplicamos a técnica de K-Fold Cross-Validation com $k=5$.Funcionamento: O código divide o dataset em 5 partes iguais. O modelo é treinado em 4 partes e testado na 5ª, repetindo o ciclo 5 vezes para que cada dado seja testado ao menos uma vez.Objetivo: A média dos resultados exibida na interface é a prova de que a performance do modelo é consistente e não fruto de uma divisão favorável de dados.
+**Como funciona**
 
-- Grid Search (Tuning de Hiperparâmetros)
-  A otimização do modelo é feita automaticamente através da classe GridSearchCV.
+* É um método de *Ensemble Learning* baseado em múltiplas árvores de decisão.
+* O modelo utiliza 100 árvores independentes (`n_estimators = 100`).
+* A decisão final é tomada por **votação majoritária** entre as árvores.
 
-Funcionamento: O sistema executa uma busca exaustiva testando diferentes combinações de profundidade de árvore e número de estimadores.
+**Por que foi utilizado**
 
-Objetivo: Sempre que uma nova query é executada, o agente identifica a "receita" de parâmetros que entrega o maior desempenho para aquele cenário específico, garantindo que a IA esteja sempre operando em seu ajuste fino.
+* Reduz significativamente o risco de  *overfitting* .
+* Garante maior capacidade de generalização para novos dados.
+* É robusto para dados reais e ruidosos, como decisões humanas.
+
+---
+
+### 🌲 3. Extra Trees Regressor
+
+Além da classificação, foi utilizado o Extra Trees para analisar **tendências e probabilidades contínuas** de aceitação do cupom.
+
+**Como funciona**
+
+* Semelhante ao Random Forest, porém com maior aleatoriedade.
+* Os pontos de corte (splits) são escolhidos de forma estocástica em cada nó.
+
+**Por que foi utilizado**
+
+* A aleatoriedade ajuda a reduzir o impacto de ruídos estatísticos.
+* Permite visualizar tendências gerais de aceitação, mesmo com dados sobrepostos.
+
+---
+
+### 🔁 4. Validação Cruzada (Cross-Validation)
+
+Para garantir que o desempenho do modelo seja confiável, foi aplicada a técnica de **K-Fold Cross-Validation** com `k = 5`.
+
+**Como funciona**
+
+* O dataset é dividido em 5 partes.
+* Em cada iteração, 4 partes são usadas para treino e 1 para teste.
+* O processo se repete até que todas as partes sejam testadas.
+
+**Por que foi utilizada**
+
+* Evita resultados enviesados por uma única divisão de dados.
+* A média dos resultados indica a estabilidade real do modelo.
+
+---
+
+### ⚙️ 5. Grid Search — Tuning de Hiperparâmetros
+
+A otimização dos modelos é realizada automaticamente com o `GridSearchCV`.
+
+**Como funciona**
+
+* O sistema testa diferentes combinações de hiperparâmetros, como:
+  * profundidade das árvores
+  * número de estimadores
+* Avalia cada combinação usando validação cruzada.
+
+**Por que foi utilizado**
+
+* Garante que o modelo opere sempre com os melhores parâmetros possíveis.
+* Facilita a demonstração didática do impacto dos hiperparâmetros na performance.
+* Permite ajustes específicos para diferentes cenários simulados no dashboard.
 
 ## Autores
 
-- [@MSCunha](https://www.github.com/MSCunha)
-
-- [](https://www.github.com/)
+- [@MSCunha](https://github.com/MSCunha)
+- [@rafaelfreitas1009](https://github.com/rafaelfreitas1009)
+- [@MrErykCardoso](https://github.com/MrErykCardoso)
 
 ## Licença
 
