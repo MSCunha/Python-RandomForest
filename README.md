@@ -138,9 +138,11 @@ A otimização dos modelos é realizada automaticamente com o `GridSearchCV`.
 
 ## Autores
 
+- [@amanda252](https://github.com/amanda252)
+- [@gabrielaqueirxz](https://github.com/gabrielaqueirxz)
 - [@MSCunha](https://github.com/MSCunha)
-- [@rafaelfreitas1009](https://github.com/rafaelfreitas1009)
 - [@MrErykCardoso](https://github.com/MrErykCardoso)
+- [@rafaelfreitas1009](https://github.com/rafaelfreitas1009)
 
 ## Licença
 
