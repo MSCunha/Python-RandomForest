@@ -11,10 +11,7 @@ from sklearn.metrics import classification_report, confusion_matrix, accuracy_sc
 from sklearn.inspection import DecisionBoundaryDisplay
 import seaborn as sns
 
-# =============================================================================
-# MÓDULO 1: TRATAMENTO E PREPARAÇÃO DOS DADOS
-# =============================================================================
-
+#TRATAMENTO E PREPARAÇÃO DOS DADOS
 class DataProcessor:
     """Classe responsável pelo processamento e preparação dos dados"""
     
@@ -30,21 +27,21 @@ class DataProcessor:
         
     def process_data(self):
         """Processa os dados: limpeza, encoding e transformações"""
-        # Remover coluna 'car' e tratar valores nulos
+        #remover coluna 'car' e tratar valores nulos
         self.df = self.df_original.drop(columns=['car']).copy()
         
-        # Preencher nulos com moda para cada coluna
+        #preencher nulos com moda para cada coluna
         for col in self.df.columns:
             if self.df[col].isnull().sum() > 0:
                 self.df[col].fillna(self.df[col].mode()[0], inplace=True)
         
-        # Criar cópia numérica
+        #criar cópia numérica
         self.df_num = self.df.copy()
         
-        # Mapear idade
+        #mapear idade
         self.df_num['age'] = self.df_num['age'].map(self.age_map)
         
-        # Label encoding para variáveis categóricas
+        #label encoding para variáveis categóricas
         for col in self.df_num.select_dtypes(include=['object']).columns:
             le = LabelEncoder()
             self.df_num[col] = le.fit_transform(self.df_num[col])
@@ -56,10 +53,7 @@ class DataProcessor:
         """Retorna valores únicos de uma coluna"""
         return self.df[column].unique()
 
-# =============================================================================
-# MÓDULO 2: MODELAGEM E AVALIAÇÃO
-# =============================================================================
-
+#MÓDULO 2: MODELAGEM E AVALIAÇÃO
 class CouponModel:
     """Classe responsável pela modelagem e avaliação de ML"""
     
@@ -83,16 +77,16 @@ class CouponModel:
         """Treina Random Forest com validação cruzada"""
         self.rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
         
-        # Validação cruzada
+        #validação cruzada
         cv_scores = cross_val_score(
             self.rf_model, self.X_train, self.y_train, 
             cv=cv_folds, scoring='accuracy'
         )
         
-        # Treinar modelo final
+        #treinar modelo final
         self.rf_model.fit(self.X_train, self.y_train)
         
-        # Avaliar no conjunto de teste
+        #avaliar no conjunto de teste
         y_pred = self.rf_model.predict(self.X_test)
         
         self.results['rf'] = {
@@ -114,16 +108,16 @@ class CouponModel:
         """Treina Extra Trees Classifier"""
         self.et_model = ExtraTreesClassifier(n_estimators=100, random_state=42)
         
-        # Validação cruzada
+        #validação cruzada
         cv_scores = cross_val_score(
             self.et_model, self.X_train, self.y_train, 
             cv=cv_folds, scoring='accuracy'
         )
         
-        # Treinar modelo final
+        #treinar modelo final
         self.et_model.fit(self.X_train, self.y_train)
         
-        # Avaliar no conjunto de teste
+        #avaliar no conjunto de teste
         y_pred = self.et_model.predict(self.X_test)
         
         self.results['et'] = {
@@ -168,10 +162,10 @@ class CouponModel:
         
         grid_search.fit(self.X_train, self.y_train)
         
-        # Salvar melhor modelo
+        #salvar melhor modelo
         self.best_model = grid_search.best_estimator_
         
-        # Avaliar melhor modelo
+        #avaliar melhor modelo
         y_pred = self.best_model.predict(self.X_test)
         
         self.results['optimized'] = {
@@ -188,10 +182,7 @@ class CouponModel:
         
         return self.results['optimized']
 
-# =============================================================================
-# MÓDULO 3: INTERFACE GRÁFICA
-# =============================================================================
-
+#INTERFACE GRÁFICA
 class CouponAnalysisGUI:
     """Interface gráfica para análise de cupons"""
     
@@ -199,7 +190,7 @@ class CouponAnalysisGUI:
         self.processor = data_processor
         self.model = CouponModel()
         
-        # Criar janela principal
+        #criar janela principal
         self.root = tk.Tk()
         self.root.title("Equipe 08 - Análise Avançada de Cupom de Veículo")
         self.root.geometry("1400x900")
@@ -212,11 +203,11 @@ class CouponAnalysisGUI:
         
     def setup_ui(self):
         """Configura a interface do usuário"""
-        # Painel de controle
+        #painel de controle
         panel = tk.LabelFrame(self.root, text="Configurações", padx=10, pady=10)
         panel.pack(side=tk.LEFT, fill=tk.Y, padx=10, pady=10)
         
-        # Filtros
+        #filtros
         tk.Label(panel, text="Filtros de Dados", font=("Arial", 10, "bold")).pack(anchor="w", pady=(0, 5))
         
         self.f_coffee = self.add_menu(
@@ -228,7 +219,7 @@ class CouponAnalysisGUI:
             self.processor.get_unique_values('destination')
         )
         
-        # Seleção de eixos
+        #seleção de eixos
         tk.Label(panel, text="\nEixos para Visualização", font=("Arial", 10, "bold")).pack(anchor="w", pady=(10, 5))
         eixos = ['temperature', 'age', 'income', 'CoffeeHouse', 'Bar', 'RestaurantLessThan20']
         
@@ -241,7 +232,7 @@ class CouponAnalysisGUI:
         self.cb_z = self.add_menu(panel, "Eixo Z:", pd.Index(eixos))
         self.cb_z.set("income")
         
-        # Configurações de modelo
+        #configurações de modelo
         tk.Label(panel, text="\nConfiguração do Modelo", font=("Arial", 10, "bold")).pack(anchor="w", pady=(10, 5))
         
         self.optimize_var = tk.BooleanVar(value=False)
@@ -250,14 +241,14 @@ class CouponAnalysisGUI:
             variable=self.optimize_var
         ).pack(anchor="w")
         
-        # Botão executar
+        #botão para executar
         self.btn = tk.Button(
             panel, text="EXECUTAR ANÁLISE", command=self.run_analysis, 
             bg="#28a745", fg="white", font=("Arial", 11, "bold"), height=2
         )
         self.btn.pack(fill=tk.X, pady=20)
         
-        # Área de log
+        #área de log
         tk.Label(panel, text="Resultados Detalhados", font=("Arial", 10, "bold")).pack(anchor="w")
         
         scroll = tk.Scrollbar(panel)
@@ -267,7 +258,7 @@ class CouponAnalysisGUI:
         self.txt_log.pack(pady=5)
         scroll.config(command=self.txt_log.yview)
         
-        # Frame para gráficos
+        #frame para gráficos
         self.frame_plot = tk.Frame(self.root, bg="white")
         self.frame_plot.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=10, pady=10)
         
@@ -295,7 +286,7 @@ class CouponAnalysisGUI:
         self.log_results("INICIANDO ANÁLISE...")
         self.log_results("="*50)
         
-        # Filtrar dados
+        #filtrar dados
         d = self.processor.df_num.copy()
         df_original = self.processor.df.copy()
         
@@ -320,18 +311,18 @@ class CouponAnalysisGUI:
         self.log_results(f"  Aceita (1): {(d['Y'] == 1).sum()} ({(d['Y'] == 1).sum()/len(d)*100:.1f}%)")
         self.log_results(f"  Rejeita (0): {(d['Y'] == 0).sum()} ({(d['Y'] == 0).sum()/len(d)*100:.1f}%)")
         
-        # Preparar features
+        #preparar features
         X = d[[self.cb_x.get(), self.cb_y.get()]]
         y = d['Y']
         
-        # Dividir em treino e teste
+        #dividir em treino e teste
         self.log_results("\n" + "="*50)
         self.log_results("DIVIDINDO DADOS (75% treino, 25% teste)...")
         self.model.prepare_train_test(X, y)
         self.log_results(f"Treino: {len(self.model.X_train)} amostras")
         self.log_results(f"Teste: {len(self.model.X_test)} amostras")
         
-        # Treinar Random Forest
+        #treinar Random Forest
         self.log_results("\n" + "="*50)
         self.log_results("TREINANDO RANDOM FOREST...")
         rf_results = self.model.train_random_forest()
@@ -341,7 +332,7 @@ class CouponAnalysisGUI:
         self.log_results(f"Recall: {rf_results['classification_report']['1']['recall']:.4f}")
         self.log_results(f"F1-Score: {rf_results['classification_report']['1']['f1-score']:.4f}")
         
-        # Treinar Extra Trees
+        #treinar Extra Trees
         self.log_results("\n" + "="*50)
         self.log_results("TREINANDO EXTRA TREES CLASSIFIER...")
         et_results = self.model.train_extra_trees()
@@ -351,7 +342,7 @@ class CouponAnalysisGUI:
         self.log_results(f"Recall: {et_results['classification_report']['1']['recall']:.4f}")
         self.log_results(f"F1-Score: {et_results['classification_report']['1']['f1-score']:.4f}")
         
-        # Otimização (opcional)
+        #otimização (opcional)
         if self.optimize_var.get():
             self.log_results("\n" + "="*50)
             self.log_results("OTIMIZANDO HIPERPARÂMETROS...")
@@ -372,7 +363,7 @@ class CouponAnalysisGUI:
         self.log_results("\n" + "="*50)
         self.log_results("GERANDO VISUALIZAÇÕES...")
         
-        # Gerar visualizações
+        #gera as visualizações
         self.plot_results(X, y, d)
         
         self.log_results("\n✓ ANÁLISE CONCLUÍDA!")
@@ -384,7 +375,7 @@ class CouponAnalysisGUI:
         
         fig = plt.figure(figsize=(16, 10))
         
-        # 1. Decision Boundary - Random Forest
+        #decision boundary - Random Forest
         ax1 = fig.add_subplot(2, 3, 1)
         try:
             DecisionBoundaryDisplay.from_estimator(
@@ -402,7 +393,7 @@ class CouponAnalysisGUI:
         ax1.set_ylabel(self.cb_y.get())
         plt.colorbar(scatter, ax=ax1, label='Aceitação')
         
-        # 2. Matriz de Confusão - Random Forest
+        #matriz de confusão - Random Forest
         ax2 = fig.add_subplot(2, 3, 2)
         cm = self.model.results['rf']['confusion_matrix']
         sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', ax=ax2, cbar=False)
@@ -410,7 +401,7 @@ class CouponAnalysisGUI:
         ax2.set_xlabel('Predito')
         ax2.set_ylabel('Real')
         
-        # 3. Feature Importance
+        #feature importance
         ax3 = fig.add_subplot(2, 3, 3)
         features = [self.cb_x.get(), self.cb_y.get()]
         importances = self.model.results['rf']['feature_importance']
@@ -423,7 +414,7 @@ class CouponAnalysisGUI:
             ax3.text(width, bar.get_y() + bar.get_height()/2, 
                     f'{importances[i]:.3f}', ha='left', va='center', fontsize=9)
         
-        # 4. Distribuição 3D
+        #distribuição 3D
         ax4 = fig.add_subplot(2, 3, 4, projection='3d')
         scatter3d = ax4.scatter(
             d[self.cb_x.get()], d[self.cb_y.get()], d[self.cb_z.get()], 
@@ -434,7 +425,7 @@ class CouponAnalysisGUI:
         ax4.set_ylabel(self.cb_y.get())
         ax4.set_zlabel(self.cb_z.get())
         
-        # 5. Comparação de Modelos
+        #comparação de modelos
         ax5 = fig.add_subplot(2, 3, 5)
         models = ['Random Forest', 'Extra Trees']
         accuracies = [
@@ -458,7 +449,7 @@ class CouponAnalysisGUI:
             ax5.text(bar.get_x() + bar.get_width()/2., height,
                     f'{height:.3f}', ha='center', va='bottom', fontsize=9, fontweight='bold')
         
-        # 6. Distribuição de Probabilidades
+        #distribuição de probabilidades
         ax6 = fig.add_subplot(2, 3, 6)
         y_proba = self.model.rf_model.predict_proba(X)[:, 1]
         ax6.hist([y_proba[y==0], y_proba[y==1]], bins=20, label=['Rejeitou', 'Aceitou'], 
@@ -479,15 +470,12 @@ class CouponAnalysisGUI:
         """Inicia a aplicação"""
         self.root.mainloop()
 
-# =============================================================================
-# EXECUÇÃO PRINCIPAL
-# =============================================================================
-
+#EXECUÇÃO PRINCIPAL
 if __name__ == "__main__":
-    # Processar dados
+    #processa dados
     processor = DataProcessor('in-vehicle-coupon-recommendation.csv')
     processor.process_data()
     
-    # Iniciar interface
+    #inicia a interface
     app = CouponAnalysisGUI(processor)
     app.run()
