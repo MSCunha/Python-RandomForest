@@ -42,8 +42,8 @@ python scikit.py
 
 - **Query Dinâmica:** Filtros interativos para simular cenários de viagem e observar a decisão do modelo em tempo real.
 - **Fronteira de Decisão (2D):** Visualização bidimensional da separação dos dados realizada pelo Random Forest.
-- **Espaço de Decisão (3D):** Gráfico tridimensional que evidencia regiões de sobreposição entre as classes.
-- **Tendência de Regressão:** Exibição da probabilidade contínua de aceitação gerada pelo Extra Trees.
+- **Distribuição dos Dados (3D):** Gráfico tridimensional que evidencia regiões de sobreposição entre as classes.
+- **Probabilidade de Classificação:** Exibição da probabilidade de aceitação do cupom gerada pelo modelo.
 - **Log de Performance:** Monitoramento dos scores de Validação Cruzada e Grid Search durante a execução.
 
 ---

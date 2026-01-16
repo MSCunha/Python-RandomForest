@@ -117,7 +117,7 @@ class DataProcessor:
         """Retorna valores únicos de uma coluna"""
         return self.df[column].unique()
 
-#MÓDULO 2: MODELAGEM E AVALIAÇÃO
+#Módulo 2: MODELAGEM E AVALIAÇÃO
 class CouponModel:
     """Classe responsável pela modelagem e avaliação de ML"""
 
@@ -425,7 +425,7 @@ class CouponAnalysisGUI:
         # Z pode continuar como "Qualquer" (ok)
         return x, y, z, changed, messages
 
-#Módulo 4: otimização e visualização
+#Módulo 4: OTIMIZAÇÃO E VISUALIZAÇÃO
 
     def add_menu(self, parent, label, options):
         """Adiciona um menu dropdown"""
