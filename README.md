@@ -23,7 +23,7 @@ Para rodar esse projeto, você precisa ter o Python instalado. O gerenciador de 
 Clone o projeto
 
 ```bash
-  https://github.com/MSCunha/Python-RandomForest.git
+git clone https://github.com/MSCunha/Python-RandomForest.git
 ```
 
 Entre no diretório do projeto
@@ -86,19 +86,19 @@ O Random Forest foi escolhido como o **modelo principal de classificação** do 
 
 ---
 
-### 🌲 3. Extra Trees Regressor
+### 🌲 3. Extra Trees Classifier
 
-Além da classificação, foi utilizado o Extra Trees para analisar **tendências e probabilidades contínuas** de aceitação do cupom.
+O **Extra Trees Classifier** foi utilizado como modelo alternativo de classificação, permitindo comparar seu desempenho com o Random Forest.
 
 **Como funciona**
 
-* Semelhante ao Random Forest, porém com maior aleatoriedade.
-* Os pontos de corte (splits) são escolhidos de forma estocástica em cada nó.
+* Método de *Ensemble Learning* baseado em múltiplas árvores de decisão.
+* Introduz maior aleatoriedade na escolha dos *splits* em cada nó.
 
 **Por que foi utilizado**
 
-* A aleatoriedade ajuda a reduzir o impacto de ruídos estatísticos.
-* Permite visualizar tendências gerais de aceitação, mesmo com dados sobrepostos.
+* Reduz o impacto de ruídos nos dados.
+* Facilita a comparação entre modelos e a análise da capacidade de generalização.
 
 ---
 
