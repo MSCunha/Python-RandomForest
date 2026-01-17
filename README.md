@@ -6,20 +6,6 @@ Esse projeto é uma ferramenta interativa desenvolvida para o nosso seminário. 
 
 Para rodar esse projeto, você precisa ter o Python instalado. O gerenciador de pacotes pip vai instalar as dependencias:
 
-```bash
-  python3 -m venv venv
-```
-
-```bash
-  source venv/bin/activate
-```
-
-```bash
-  pip install -r dependences.txt
-```
-
-## Rodando localmente
-
 Clone o projeto
 
 ```bash
@@ -31,6 +17,26 @@ Entre no diretório do projeto
 ```bash
   cd Python-RandomForest
 ```
+
+Crie um ambiente virtual do projeto para instalação das dependências
+
+```bash
+  python3 -m venv venv
+```
+
+Ative o ambiente virtual
+
+```bash
+  source venv/bin/activate
+```
+
+Instale as dependências usando o gerenciador de pacotes do python
+
+```bash
+  pip install -r dependences.txt
+```
+
+## Rodando localmente
 
 Certifique-se de que o arquivo in-vehicle-coupon-recommendation.csv está na mesma pasta e inicie o script:
 
@@ -50,7 +56,7 @@ python scikit.py
 
 ## Documentação do Processo
 
-Esta seção descreve as principais decisões técnicas adotadas no projeto, explicando **como cada etapa funciona** e  **por que ela foi utilizada** , com foco didático e manutenção futura.
+Esta seção descreve as principais decisões técnicas adotadas no projeto, explicando **como cada etapa funciona** e **por que ela foi utilizada** , com foco didático e manutenção futura.
 
 ### 🔹 1. Pré-processamento — Label Encoding
 
@@ -58,13 +64,13 @@ Antes do treinamento dos modelos, foi necessário tratar as variáveis categóri
 
 **Como funciona**
 
-* Utiliza-se o `LabelEncoder` para converter textos em valores numéricos inteiros.
-* Cada categoria textual passa a ser representada por um número.
+- Utiliza-se o `LabelEncoder` para converter textos em valores numéricos inteiros.
+- Cada categoria textual passa a ser representada por um número.
 
 **Por que foi utilizado**
 
-* Algoritmos de Machine Learning trabalham com dados numéricos.
-* Árvores de decisão precisam desses valores para realizar os critérios de divisão (splits) durante o treinamento.
+- Algoritmos de Machine Learning trabalham com dados numéricos.
+- Árvores de decisão precisam desses valores para realizar os critérios de divisão (splits) durante o treinamento.
 
 ---
 
@@ -74,15 +80,15 @@ O Random Forest foi escolhido como o **modelo principal de classificação** do 
 
 **Como funciona**
 
-* É um método de *Ensemble Learning* baseado em múltiplas árvores de decisão.
-* O modelo utiliza 100 árvores independentes (`n_estimators = 100`).
-* A decisão final é tomada por **votação majoritária** entre as árvores.
+- É um método de _Ensemble Learning_ baseado em múltiplas árvores de decisão.
+- O modelo utiliza 100 árvores independentes (`n_estimators = 100`).
+- A decisão final é tomada por **votação majoritária** entre as árvores.
 
 **Por que foi utilizado**
 
-* Reduz significativamente o risco de  *overfitting* .
-* Garante maior capacidade de generalização para novos dados.
-* É robusto para dados reais e ruidosos, como decisões humanas.
+- Reduz significativamente o risco de _overfitting_ .
+- Garante maior capacidade de generalização para novos dados.
+- É robusto para dados reais e ruidosos, como decisões humanas.
 
 ---
 
@@ -92,13 +98,13 @@ O **Extra Trees Classifier** foi utilizado como modelo alternativo de classifica
 
 **Como funciona**
 
-* Método de *Ensemble Learning* baseado em múltiplas árvores de decisão.
-* Introduz maior aleatoriedade na escolha dos *splits* em cada nó.
+- Método de _Ensemble Learning_ baseado em múltiplas árvores de decisão.
+- Introduz maior aleatoriedade na escolha dos _splits_ em cada nó.
 
 **Por que foi utilizado**
 
-* Reduz o impacto de ruídos nos dados.
-* Facilita a comparação entre modelos e a análise da capacidade de generalização.
+- Reduz o impacto de ruídos nos dados.
+- Facilita a comparação entre modelos e a análise da capacidade de generalização.
 
 ---
 
@@ -108,14 +114,14 @@ Para garantir que o desempenho do modelo seja confiável, foi aplicada a técnic
 
 **Como funciona**
 
-* O dataset é dividido em 5 partes.
-* Em cada iteração, 4 partes são usadas para treino e 1 para teste.
-* O processo se repete até que todas as partes sejam testadas.
+- O dataset é dividido em 5 partes.
+- Em cada iteração, 4 partes são usadas para treino e 1 para teste.
+- O processo se repete até que todas as partes sejam testadas.
 
 **Por que foi utilizada**
 
-* Evita resultados enviesados por uma única divisão de dados.
-* A média dos resultados indica a estabilidade real do modelo.
+- Evita resultados enviesados por uma única divisão de dados.
+- A média dos resultados indica a estabilidade real do modelo.
 
 ---
 
@@ -125,16 +131,16 @@ A otimização dos modelos é realizada automaticamente com o `GridSearchCV`.
 
 **Como funciona**
 
-* O sistema testa diferentes combinações de hiperparâmetros, como:
-  * profundidade das árvores
-  * número de estimadores
-* Avalia cada combinação usando validação cruzada.
+- O sistema testa diferentes combinações de hiperparâmetros, como:
+  - profundidade das árvores
+  - número de estimadores
+- Avalia cada combinação usando validação cruzada.
 
 **Por que foi utilizado**
 
-* Garante que o modelo opere sempre com os melhores parâmetros possíveis.
-* Facilita a demonstração didática do impacto dos hiperparâmetros na performance.
-* Permite ajustes específicos para diferentes cenários simulados no dashboard.
+- Garante que o modelo opere sempre com os melhores parâmetros possíveis.
+- Facilita a demonstração didática do impacto dos hiperparâmetros na performance.
+- Permite ajustes específicos para diferentes cenários simulados no dashboard.
 
 ## Autores
 
